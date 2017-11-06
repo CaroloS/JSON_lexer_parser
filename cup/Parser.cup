@@ -1,0 +1,44 @@
+package Example;
+
+import java_cup.runtime.*;
+
+parser code {:
+	public static void main(String args[]) throws Exception {
+		SymbolFactory sf = new DefaultSymbolFactory();
+		if (args.length==0) new Parser(new Scanner(System.in,sf),sf).parse();
+		else new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
+	}
+:}
+
+/* Declares the terminals as defined in Scanner.jflex */
+
+terminal COMMA, COLON, LSQBRACKET, RSQBRACKET, LBRACE, RBRACE;
+terminal Boolean BOOLEAN;
+terminal NULL;
+terminal Double ALLNUMBER;
+terminal String STRING;
+
+/*Declares the non terminals - as defined by the JSON specification*/
+
+non terminal valid_json, array, object, pair_list, pair, value, inner_array, value_list;
+non terminal expr;
+
+
+/* Defines the syntax structure of JSON - either arrays or objects */
+/* composed of key:value pairs, where key is string and value is  */
+/* string/boolean/number/array/null/object */
+
+valid_json::= object | array ;
+array::= LSQBRACKET RSQBRACKET | LSQBRACKET value_list RSQBRACKET ;
+object::= LBRACE RBRACE | LBRACE pair_list RBRACE ;
+pair_list::= pair_list COMMA pair| pair;
+pair::= STRING COLON value;
+
+inner_array ::= LSQBRACKET value_list RSQBRACKET;
+value_list ::= value_list COMMA value | value;
+
+value::= expr:e {: System.out.println("JSON Parsed!"+ " value: " + e ); :};
+expr      ::=  STRING:s {: RESULT = s;  :}| ALLNUMBER:n {: RESULT = n;  :}
+							| BOOLEAN:b {: RESULT = b;  :} | NULL:e {: RESULT = e;  :}
+							| inner_array:a {: RESULT = a;  :}| object:o {: RESULT = o;  :}
+				;
