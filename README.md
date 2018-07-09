@@ -2,7 +2,7 @@
 
 
 <strong>Overview</strong> <br>
-A JSON lexer and parser that will take input and check if input is valid JSON based on the official structural specifications (http://json.org/). The main files are: <br>
+A JSON lexer and parser that will take input and check if input is valid JSON based on the official structural specifications (http://json.org/). The main files are: <br><br>
 Scanner.jflex: A lexical generator (scanner) in Jflex  <br>
 Parser.cup: A syntax analyser (parser) in CUP 
 
